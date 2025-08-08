@@ -624,9 +624,13 @@ export class AcceleratorToolkit {
     const savePath = path.join(__dirname, '..', saveDirectory!);
     const stacksInFolder = await getAllFilesInPattern(savePath, '.template.json');
 
+    // PROOF LOGGING: Show duplicate processing bug
+    logger.warn(`DIFF_BUG_PROOF: Stack '${stack}' will process ${stacksInFolder.length} template files: [${stacksInFolder.join(', ')}]`);
+
     const roleName = GlobalConfig.loadRawGlobalConfig(options.configDirPath!).managementAccountAccessRole;
 
     for (const eachStack of stacksInFolder) {
+      logger.warn(`DIFF_BUG_PROOF: Stack '${stack}' processing template '${eachStack}' (should only process its own)`);
       logger.debug(
         `Running diff for stack ${eachStack} in stage ${options.stage} for account ${options.accountId} in region ${options.region}`,
       );

@@ -22,6 +22,8 @@ export async function getCloudFormationTemplate(
   savePath: string,
   roleName: string,
 ) {
+  // PROOF LOGGING: Track API calls per stack
+  logger.warn(`DIFF_BUG_PROOF: getCloudFormationTemplate called for stack '${stackName}' in account ${accountId}/${region}`);
   try {
     const currentAccountId = await getCurrentAccountId(partition, region);
     const client = await getCloudFormationClient(
@@ -89,6 +91,8 @@ async function getTemplate(client: CloudFormationClient, stackName: string, temp
       TemplateStage: templateStage as TemplateStage,
     };
     const command = new GetTemplateCommand(input);
+    // PROOF LOGGING: Track actual API calls
+    logger.warn(`DIFF_BUG_PROOF: Making GetTemplate API call for stack '${stackName}' with stage '${templateStage}'`);
     const response = await throttlingBackOff(() => client.send(command));
     const templateBody = isValidJsonObject(response.TemplateBody ?? '');
     return templateBody;
